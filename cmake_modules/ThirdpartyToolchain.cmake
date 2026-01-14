@@ -649,6 +649,7 @@ macro(build_orc)
         "-DZSTD_HOME=${ORC_ZSTD_ROOT}"
         "-DZLIB_HOME=${ORC_ZLIB_ROOT}"
         "-DPROTOBUF_HOME=${ORC_PROTOBUF_ROOT}"
+        "-DProtobuf_ROOT=${ORC_PROTOBUF_ROOT}"
         -DBUILD_JAVA=OFF
         -DBUILD_CPP_TESTS=OFF
         -DBUILD_TOOLS=OFF
