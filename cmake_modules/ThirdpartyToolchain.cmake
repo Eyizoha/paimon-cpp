@@ -190,6 +190,13 @@ if(NOT MSVC_TOOLCHAIN)
     string(APPEND EP_C_FLAGS " -fPIC")
 endif()
 
+if (PAIMON_USE_CXX11_ABI)
+    string(APPEND EP_CXX_FLAGS " -D_GLIBCXX_USE_CXX11_ABI=1")
+else ()
+    string(APPEND EP_CXX_FLAGS " -D_GLIBCXX_USE_CXX11_ABI=0")
+endif ()
+
+
 # External projects are still able to override the following declarations.
 # cmake command line will favor the last defined variable when a duplicate is
 # encountered. This requires that `EP_COMMON_CMAKE_ARGS` is always the first
