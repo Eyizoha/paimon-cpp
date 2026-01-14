@@ -73,7 +73,7 @@ DEPENDENCIES=(
   "PAIMON_GTEST_URL gtest-${PAIMON_GTEST_BUILD_VERSION}.tar.gz ${THIRDPARTY_MIRROR_URL}https://github.com/google/googletest/archive/release-${PAIMON_GTEST_BUILD_VERSION}.tar.gz"
   "PAIMON_ARROW_URL apache-arrow-${PAIMON_ARROW_BUILD_VERSION}.tar.gz ${THIRDPARTY_MIRROR_URL}https://github.com/apache/arrow/releases/download/apache-arrow-${PAIMON_ARROW_BUILD_VERSION}/apache-arrow-${PAIMON_ARROW_BUILD_VERSION}.tar.gz"
   "PAIMON_AVRO_URL avro-${PAIMON_AVRO_BUILD_VERSION}.tar.gz ${THIRDPARTY_MIRROR_URL}https://github.com/apache/avro/archive/${PAIMON_AVRO_BUILD_VERSION}.tar.gz"
-  "PAIMON_FMT_URL fmt-${PAIMON_FMT_BUILD_VERSION}.tar.gz ${THIRDPARTY_MIRROR_URL}https://github.com/fmtlib/fmt/archive/refs/tags/{PAIMON_FMT_BUILD_VERSION}.tar.gz"
+  "PAIMON_FMT_URL fmt-${PAIMON_FMT_BUILD_VERSION}.tar.gz ${THIRDPARTY_MIRROR_URL}https://github.com/fmtlib/fmt/archive/refs/tags/${PAIMON_FMT_BUILD_VERSION}.tar.gz"
   "PAIMON_GLOG_URL glog-${PAIMON_GLOG_BUILD_VERSION}.tar.gz ${THIRDPARTY_MIRROR_URL}https://github.com/google/glog/archive/${PAIMON_GLOG_BUILD_VERSION}.tar.gz"
   "PAIMON_RAPIDJSON_URL rapidjson-${PAIMON_RAPIDJSON_BUILD_VERSION}.tar.gz ${THIRDPARTY_MIRROR_URL}https://github.com/miloyip/rapidjson/archive/${PAIMON_RAPIDJSON_BUILD_VERSION}.tar.gz"
   "PAIMON_JINDOSDK_C_URL jindosdk-${PAIMON_JINDOSDK_C_BUILD_VERSION}.tar.gz https://jindodata-binary.oss-cn-shanghai.aliyuncs.com/release/${PAIMON_JINDOSDK_C_BUILD_VERSION}/jindosdk-${PAIMON_JINDOSDK_C_BUILD_VERSION}-linux.tar.gz"
