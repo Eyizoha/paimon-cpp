@@ -28,7 +28,7 @@ set -eu
 SOURCE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ "$#" -ne 1 ]; then
-  orig_destdir=$(pwd)
+  orig_destdir=${SOURCE_DIR}
 else
   orig_destdir=$1
 fi
