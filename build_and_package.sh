@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 SOURCE_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 OUTPUT_DIR="$SOURCE_ROOT/output"
@@ -82,26 +82,21 @@ echo "Step 1: Downloading dependencies..."
 
 echo "Step 2: Building Paimon..."
 BUILD_DIR="$SOURCE_ROOT/build-$BUILD_TYPE"
+PACKAGE_DIR="$OUTPUT_DIR/$BUILD_NAME"
+
+if [ "$MAKE_CLEAN" = true ]; then
+    rm -rf "$BUILD_DIR"
+fi
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-if [ "$MAKE_CLEAN" = true ]; then
-    rm -rf ./*
-fi
-cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE $CMAKE_OPTIONS ..
+cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX="$PACKAGE_DIR" $CMAKE_OPTIONS ..
 make -j"$(nproc 2>/dev/null || echo 4)"
-cd ..
 
 if [ "$PACKAGE" = true ]; then
     echo "Step 3: Packaging..."
     mkdir -p "$OUTPUT_DIR"
-    PACKAGE_DIR="$OUTPUT_DIR/$BUILD_NAME"
-    rm -rf "$PACKAGE_DIR"
-    mkdir -p "$PACKAGE_DIR/include" "$PACKAGE_DIR/lib"
-
-    cp -r include/* "$PACKAGE_DIR/include/"
-    cp -r "$BUILD_DIR"/$BUILD_TYPE/*.a "$PACKAGE_DIR/lib/"
-    cp -r "$BUILD_DIR"/$BUILD_TYPE/*.so "$PACKAGE_DIR/lib/"
-
+    cd "$BUILD_DIR"
+    make install
     tar -czvf "$OUTPUT_DIR/$BUILD_NAME.tar.gz" -C "$OUTPUT_DIR" "$BUILD_NAME"
     echo "Package created: $OUTPUT_DIR/$BUILD_NAME.tar.gz"
 else
