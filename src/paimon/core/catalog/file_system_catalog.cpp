@@ -27,7 +27,6 @@
 #include "paimon/common/utils/arrow/status_utils.h"
 #include "paimon/common/utils/path_util.h"
 #include "paimon/common/utils/string_utils.h"
-#include "paimon/core/schema/schema_impl.h"
 #include "paimon/core/schema/schema_manager.h"
 #include "paimon/fs/file_system.h"
 #include "paimon/logging.h"
@@ -85,6 +84,12 @@ Result<bool> FileSystemCatalog::DataBaseExists(const std::string& db_name) const
             "do not support checking DataBaseExists for system database.");
     }
     return fs_->Exists(NewDatabasePath(warehouse_, db_name));
+}
+
+Result<bool> FileSystemCatalog::TableExists(const Identifier& identifier) const {
+    PAIMON_ASSIGN_OR_RAISE(std::optional<std::shared_ptr<TableSchema>> latest_schema,
+                           TableSchemaExists(identifier));
+    return latest_schema != std::nullopt;
 }
 
 Status FileSystemCatalog::CreateTable(const Identifier& identifier, ArrowSchema* c_schema,
@@ -216,7 +221,7 @@ Result<std::shared_ptr<Schema>> FileSystemCatalog::LoadTableSchema(
     if (!latest_schema) {
         return Status::NotExist(fmt::format("{} not exist", identifier.ToString()));
     }
-    return std::make_shared<SchemaImpl>(*latest_schema);
+    return std::static_pointer_cast<Schema>(*latest_schema);
 }
 
 }  // namespace paimon
