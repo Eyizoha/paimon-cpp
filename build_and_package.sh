@@ -35,11 +35,11 @@ EOF
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -r|--release)
-            BUILD_TYPE="release"
+            BUILD_TYPE="Release"
             shift
             ;;
         -d|--debug)
-            BUILD_TYPE="debug"
+            BUILD_TYPE="Debug"
             BUILD_NAME=$BUILD_NAME"-debug"
             shift
             ;;
@@ -89,8 +89,19 @@ if [ "$MAKE_CLEAN" = true ]; then
 fi
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX="$PACKAGE_DIR" $CMAKE_OPTIONS ..
-make -j"$(nproc 2>/dev/null || echo 4)"
+CMAKE_ARGS=(
+    -DCMAKE_BUILD_TYPE="$BUILD_TYPE"
+    -DCMAKE_INSTALL_PREFIX="$PACKAGE_DIR"
+)
+
+if [ -n "$CMAKE_OPTIONS" ]; then
+    CMAKE_ARGS+=("$CMAKE_OPTIONS")
+fi
+
+cmake "${CMAKE_ARGS[@]}" ..
+
+JOBS=$(nproc 2>/dev/null || echo 4)
+make -j"$JOBS"
 
 if [ "$PACKAGE" = true ]; then
     echo "Step 3: Packaging..."

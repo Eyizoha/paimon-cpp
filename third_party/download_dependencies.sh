@@ -45,11 +45,14 @@ download_dependency() {
   # Determine which checksum command is available
   local checksum_cmd=""
   if command -v sha256sum >/dev/null 2>&1; then
-    checksum_cmd="sha256sum"
+    checksum_cmd=(sha256sum)
+    checksum_field=1
   elif command -v shasum >/dev/null 2>&1; then
-    checksum_cmd="shasum -a 256"
+    checksum_cmd=(shasum -a 256)
+    checksum_field=1
   elif command -v openssl >/dev/null 2>&1; then
-    checksum_cmd="openssl dgst -sha256"
+    checksum_cmd=(openssl dgst -sha256)
+    checksum_field=2
   else
     echo "Error: No checksum command available (sha256sum, shasum, or openssl)" 1>&2
     exit 1
@@ -58,20 +61,15 @@ download_dependency() {
   # Function to calculate checksum
   calculate_checksum() {
     local file=$1
-    if [ "${checksum_cmd}" = "openssl dgst -sha256" ]; then
-      # openssl output format is different, need to extract hash
-      openssl dgst -sha256 "${file}" | cut -d' ' -f2
-    else
-      # sha256sum and shasum have similar output format
-      ${checksum_cmd} "${file}" | cut -d' ' -f1
-    fi
+    "${checksum_cmd[@]}" "${file}" | cut -d' ' -f"${checksum_field}"
   }
 
   # Check if the file already exists
   if [ -f "${out}" ]; then
     echo "File ${out} already exists, verifying checksum..."
     # Calculate checksum of existing file
-    local actual_checksum=$(calculate_checksum "${out}")
+    local actual_checksum
+    actual_checksum=$(calculate_checksum "${out}")
     
     # Compare checksums
     if [ "${actual_checksum}" = "${expected_checksum}" ]; then
@@ -85,11 +83,12 @@ download_dependency() {
 
   echo "Downloading ${url} to ${out}..."
   wget --continue --output-document="${out}" "${url}" || \
-    (echo "Failed to download ${url}" 1>&2; exit 1)
+    (echo "Failed downloading ${url}" 1>&2; exit 1)
     
   # Verify checksum after download
   echo "Verifying checksum of downloaded file..."
-  local actual_checksum=$(calculate_checksum "${out}")
+  local actual_checksum
+  actual_checksum=$(calculate_checksum "${out}")
   if [ "${actual_checksum}" != "${expected_checksum}" ]; then
     echo "Error: Checksum mismatch (expected: ${expected_checksum}, actual: ${actual_checksum})" 1>&2
     rm -f "${out}"
@@ -102,7 +101,7 @@ main() {
   mkdir -p "${DESTDIR}"
 
   # Load `DEPENDENCIES` variable.
-  source ${SOURCE_DIR}/versions.txt
+  source "${SOURCE_DIR}"/versions.txt
 
   echo "# Environment variables for offline Paimon build"
   for ((i = 0; i < ${#DEPENDENCIES[@]}; i++)); do
