@@ -43,9 +43,10 @@ set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/third_party")
 file(STRINGS "${THIRDPARTY_DIR}/versions.txt" TOOLCHAIN_VERSIONS_TXT)
 foreach(_VERSION_ENTRY ${TOOLCHAIN_VERSIONS_TXT})
     # Exclude comments
-    if(NOT ((_VERSION_ENTRY MATCHES "^[^#][A-Za-z0-9-_]+_VERSION=")
-            OR (_VERSION_ENTRY MATCHES "^[^#][A-Za-z0-9-_]+_CHECKSUM=")
-            OR (_VERSION_ENTRY MATCHES "^[^#][A-Za-z0-9-_]+_PKG_NAME=")))
+    if(NOT
+       ((_VERSION_ENTRY MATCHES "^[^#][A-Za-z0-9-_]+_VERSION=")
+        OR (_VERSION_ENTRY MATCHES "^[^#][A-Za-z0-9-_]+_CHECKSUM=")
+        OR (_VERSION_ENTRY MATCHES "^[^#][A-Za-z0-9-_]+_PKG_NAME=")))
         continue()
     endif()
 
@@ -248,12 +249,11 @@ if(NOT MSVC_TOOLCHAIN)
     string(APPEND EP_C_FLAGS " -fPIC")
 endif()
 
-if (PAIMON_USE_CXX11_ABI)
+if(PAIMON_USE_CXX11_ABI)
     string(APPEND EP_CXX_FLAGS " -D_GLIBCXX_USE_CXX11_ABI=1")
-else ()
+else()
     string(APPEND EP_CXX_FLAGS " -D_GLIBCXX_USE_CXX11_ABI=0")
-endif ()
-
+endif()
 
 # External projects are still able to override the following declarations.
 # cmake command line will favor the last defined variable when a duplicate is
