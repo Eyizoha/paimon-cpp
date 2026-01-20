@@ -50,6 +50,13 @@ class PAIMON_EXPORT Schema {
     /// @return A vector of field names.
     virtual std::vector<std::string> FieldNames() const = 0;
 
+    /// Get the type of specific field.
+    ///
+    /// @param fieldName The name of the field to query.
+    /// @return Result containing the FieldType of the specified field, or an error status on
+    /// failure.
+    virtual Result<FieldType> GetFieldType(const std::string& fieldName) const = 0;
+
     /// Get the unique identifier of this table schema.
     /// @return The schema id
     virtual int64_t Id() const = 0;

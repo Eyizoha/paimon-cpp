@@ -356,6 +356,17 @@ TEST(FileSystemCatalogTest, TestValidateTableSchema) {
     std::vector<std::string> expected_field_names = {"f0", "f1", "f2", "f3"};
     ASSERT_EQ(field_names, expected_field_names);
 
+    FieldType type;
+    ASSERT_OK_AND_ASSIGN(type, table_schema->GetFieldType("f0"));
+    ASSERT_EQ(type, FieldType::STRING);
+    ASSERT_OK_AND_ASSIGN(type, table_schema->GetFieldType("f1"));
+    ASSERT_EQ(type, FieldType::INT);
+    ASSERT_OK_AND_ASSIGN(type, table_schema->GetFieldType("f2"));
+    ASSERT_EQ(type, FieldType::INT);
+    ASSERT_OK_AND_ASSIGN(type, table_schema->GetFieldType("f3"));
+    ASSERT_EQ(type, FieldType::DOUBLE);
+    ASSERT_NOK(table_schema->GetFieldType("f4"));
+
     ASSERT_OK_AND_ASSIGN(auto fs, FileSystemFactory::Get("local", dir->Str(), {}));
     std::string schema_path =
         PathUtil::JoinPath(catalog.GetTableLocation(identifier), "schema/schema-0");
