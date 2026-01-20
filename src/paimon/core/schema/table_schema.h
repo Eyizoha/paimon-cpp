@@ -66,7 +66,7 @@ class TableSchema : public Schema, public Jsonizable<TableSchema> {
 
     std::vector<std::string> FieldNames() const override;
 
-    Result<FieldType> GetFieldType(const std::string& fieldName) const override;
+    Result<FieldType> GetFieldType(const std::string& field_name) const override;
 
     int64_t Id() const override {
         return id_;
