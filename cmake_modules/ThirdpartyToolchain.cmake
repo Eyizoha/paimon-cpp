@@ -58,10 +58,16 @@ foreach(_VERSION_ENTRY ${TOOLCHAIN_VERSIONS_TXT})
         continue()
     endif()
 
-    # For debugging
-    message(STATUS "${_VARIABLE_NAME}: ${_VARIABLE_VALUE}")
-
     set(${_VARIABLE_NAME} ${_VARIABLE_VALUE})
+
+    if(_VARIABLE_NAME MATCHES "_PKG_NAME$")
+        # Expand version to package name
+        string(CONFIGURE "${${_VARIABLE_NAME}}" _EXPANDED ESCAPE_QUOTES)
+        set(${_VARIABLE_NAME} "${_EXPANDED}")
+    endif()
+
+    # For debugging
+    message(STATUS "${_VARIABLE_NAME}: ${${_VARIABLE_NAME}}")
 endforeach()
 
 if(DEFINED ENV{PAIMON_THIRDPARTY_MIRROR_URL})
