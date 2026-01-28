@@ -13,6 +13,9 @@
 # limitations under the License.
 
 set(PAIMON_COMMON_SRCS
+    common/compression/block_compression_factory.cpp
+    common/compression/block_compressor.cpp
+    common/compression/block_decompressor.cpp
     common/data/abstract_binary_writer.cpp
     common/data/binary_array.cpp
     common/data/binary_array_writer.cpp
@@ -46,6 +49,7 @@ set(PAIMON_COMMON_SRCS
     common/fs/file_system.cpp
     common/fs/resolving_file_system.cpp
     common/fs/file_system_factory.cpp
+    common/global_config.cpp
     common/global_index/complete_index_score_batch_reader.cpp
     common/global_index/bitmap_vector_search_global_index_result.cpp
     common/global_index/bitmap_global_index_result.cpp
@@ -115,6 +119,7 @@ set(PAIMON_COMMON_SRCS
     common/utils/bloom_filter.cpp
     common/utils/bloom_filter64.cpp
     common/utils/bucket_id_calculator.cpp
+    common/utils/crc32c.cpp
     common/utils/decimal_utils.cpp
     common/utils/delta_varint_compressor.cpp
     common/utils/path_util.cpp
@@ -439,7 +444,9 @@ if(PAIMON_BUILD_TESTS)
 
     add_paimon_test(common_sst_file_format_test
                     SOURCES
+                    common/compression/block_compression_factory_test.cpp
                     common/sst/sst_file_io_test.cpp
+                    common/utils/crc32c_test.cpp
                     STATIC_LINK_LIBS
                     paimon_shared
                     test_utils_static
